@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "67865947995",
+    "project_id": "thespot-5e5e7",
+    "storage_bucket": "thespot-5e5e7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67865947995:android:80e71454dfc4dfc9a0b47e",
+        "android_client_info": {
+          "package_name": "com.example.the_spot_proyectofinal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_syk_UOWVtPtAIDdvNvjlmpYmO6g6v1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
