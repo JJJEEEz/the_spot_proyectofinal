@@ -78,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[400],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -93,10 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 50),
               // Mensaje de Bienvenida
-              Text(
-                "Lets crate an account!",
-                style: TextStyle(color: Colors.grey[800]),
-              ),
+              Text("Lets crate an account!"),
               const SizedBox(height: 25),
               // Textfield de Correo
               MyTextField(

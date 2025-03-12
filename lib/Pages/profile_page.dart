@@ -51,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //boton de guardar
           TextButton(
             child: Text(
-              'Cancel',
+              'Save',
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () => Navigator.of(context).pop(newValue),

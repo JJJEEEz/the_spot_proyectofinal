@@ -81,76 +81,94 @@ class _LienzoPostState extends State<LienzoPost> {
   // mostrar un dialogo para añadir un comentario
   void showCommentDialog() {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-                title: Text("Add Comment"),
-                content: TextField(
-                  controller: _commentTextController,
-                  decoration: InputDecoration(hintText: "Write your comment"),
-                ),
-                actions: [
-                  //boton para cancelar
-                  TextButton(
-                    onPressed: () {
-                      //eliminar cuadro de texto
-                      Navigator.pop(context);
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Add Comment"),
+        content: TextField(
+          controller: _commentTextController,
+          decoration: InputDecoration(hintText: "Write your comment"),
+        ),
+        actions: [
+          //boton para cancelar
+          TextButton(
+            onPressed: () {
+              //eliminar cuadro de texto
+              Navigator.pop(context);
 
-                      // borrar contenido del controlador
-                      _commentTextController.clear();
-                    },
-                    child: Text("Cancel"),
-                  ),
+              // borrar contenido del controlador
+              _commentTextController.clear();
+            },
+            child: Text("Cancel"),
+          ),
 
-                  //boton para postear el comentario
-                  TextButton(
-                    onPressed: () {
-                      //añadir comentario
-                      addComent(_commentTextController.text);
-                      // eliminar cuadro de texto
-                      Navigator.pop(context);
-                      // borrar contenido del controlador
-                      _commentTextController.clear();
-                    },
-                    child: Text("Post"),
-                  ),
-                ],
-            ),
-          );
+          //boton para postear el comentario
+          TextButton(
+            onPressed: () {
+              //añadir comentario
+              addComent(_commentTextController.text);
+              // eliminar cuadro de texto
+              Navigator.pop(context);
+              // borrar contenido del controlador
+              _commentTextController.clear();
+            },
+            child: Text("Post"),
+          ),
+        ],
+      ),
+    );
   }
 
   //Borrar un post
-  void deleteLienzo(){
+  void deleteLienzo() {
     // Mostrar un dialog box, para confirmar antes de eliminar el lienzo
     showDialog(
-      context: context, 
+      context: context,
       builder: (context) => AlertDialog(
         title: const Text("Delete Post"),
         content: const Text("Are you sure you want to delete this post?"),
         actions: [
           //Boton para cancelar
           TextButton(
-            onPressed: () => Navigator.pop(context), 
+            onPressed: () => Navigator.pop(context),
             child: const Text("Cancel"),
           ),
-          
+
           //Boton para eliminar
           TextButton(
             onPressed: () async {
               //Borrar el comentario de la firestore
               final commentDocs = await FirebaseFirestore.instance
-              .collection("Lienzos")
-              .doc(widget.postId)
-              .collection("Comments")
-              .get(),
-              
+                  .collection("Lienzos")
+                  .doc(widget.postId)
+                  .collection("Comments")
+                  .get();
+
+              for (var doc in commentDocs.docs) {
+                await FirebaseFirestore.instance
+                    .collection("Lienzos")
+                    .doc(widget.postId)
+                    .collection("comments")
+                    .doc(doc.id)
+                    .delete();
+              }
+
               //Eliminar el lienzo
-;}, 
+              FirebaseFirestore.instance
+                  .collection("Lienzos")
+                  .doc(widget.postId)
+                  .delete()
+                  .then((value) => print("Post deleted"))
+                  .catchError(
+                      (error) => print("Failed to delete post: $error"));
+
+              //borrar el cuadro de dialogo
+              Navigator.pop(context);
+            },
             child: const Text("Delete"),
           ),
-      ],
-    ),
-      
-      ;)
+        ],
+      ),
+    );
   }
 
   @override
@@ -167,8 +185,9 @@ class _LienzoPostState extends State<LienzoPost> {
         children: [
           // Lienzo
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               //grupo de texto (mensaje + usuario)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,11 +200,12 @@ class _LienzoPostState extends State<LienzoPost> {
                         style: TextStyle(color: Colors.grey[400]),
                       ),
                       Text(" - ", style: TextStyle(color: Colors.grey[400])),
-                      Text(widget.time, style: TextStyle(color: Colors.grey[400])),
+                      Text(widget.time,
+                          style: TextStyle(color: Colors.grey[400])),
                     ],
                   ),
                   const SizedBox(height: 10),
-              
+
                   //mensaje
                   Text(widget.message),
                 ],
@@ -193,7 +213,7 @@ class _LienzoPostState extends State<LienzoPost> {
 
               //Boton de eliminar
               if (widget.user == currentUser.email)
-              DeleteButton(onTap: deletePost)
+                DeleteButton(onTap: deleteLienzo),
             ],
           ),
 
