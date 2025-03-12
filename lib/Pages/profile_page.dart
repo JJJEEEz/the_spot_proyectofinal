@@ -70,6 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           title: Center(
@@ -78,7 +79,6 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(color: Colors.white),
             ),
           ),
-          backgroundColor: Colors.grey[900],
         ),
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance

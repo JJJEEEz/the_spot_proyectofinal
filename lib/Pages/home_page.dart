@@ -5,6 +5,7 @@ import 'package:the_spot_proyectofinal/components/drawer.dart';
 import 'package:the_spot_proyectofinal/Pages/profile_page.dart';
 import 'package:the_spot_proyectofinal/components/text_field.dart';
 import 'package:the_spot_proyectofinal/components/wall_post.dart';
+import 'package:the_spot_proyectofinal/helper/helper_methods.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,14 +61,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
           title: Center(
               child: Text(
             "The Spot",
             style: TextStyle(color: Colors.white),
           )),
-          backgroundColor: Colors.grey[850],
           iconTheme: IconThemeData(color: Colors.white),
         ),
         drawer: MyDrawer(
@@ -97,6 +97,7 @@ class _HomePageState extends State<HomePage> {
                             postId: post.id,
                             likes: List<String>.from(
                                 post['Likes'] ?? []), // ?? [] para evitar null
+                            time: formatDate(post['TimeStamp']),
                           );
                         },
                       );

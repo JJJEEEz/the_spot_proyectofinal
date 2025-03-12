@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:the_spot_proyectofinal/components/comment.dart';
 import 'package:the_spot_proyectofinal/components/comment_button.dart';
+import 'package:the_spot_proyectofinal/components/delete_button.dart';
 import 'package:the_spot_proyectofinal/components/like_button.dart';
 import 'package:the_spot_proyectofinal/helper/helper_methods.dart';
 
 class LienzoPost extends StatefulWidget {
   final String message;
   final String user;
+  final String time;
   final String postId;
   final List<String> likes;
 
@@ -16,6 +18,7 @@ class LienzoPost extends StatefulWidget {
     super.key,
     required this.message,
     required this.user,
+    required this.time,
     required this.postId,
     required this.likes,
   });
@@ -65,13 +68,13 @@ class _LienzoPostState extends State<LienzoPost> {
   void addComent(String commentText) {
     // Escribimos el comentario a firestore en la colección de comentarios, dentro de la coleccion de userpost
     FirebaseFirestore.instance
-        .collection("UserPost")
+        .collection("Lienzos")
         .doc(widget.postId)
         .collection("Comments")
         .add({
       "CommentText": commentText,
-      "CommentedBy": currentUser.email,
-      "CommentTime": Timestamp.now()
+      "CommentTime": Timestamp.now(),
+      "CommentedBy": currentUser.email
     });
   }
 
@@ -110,14 +113,51 @@ class _LienzoPostState extends State<LienzoPost> {
                     },
                     child: Text("Post"),
                   ),
-                ]));
+                ],
+            ),
+          );
+  }
+
+  //Borrar un post
+  void deleteLienzo(){
+    // Mostrar un dialog box, para confirmar antes de eliminar el lienzo
+    showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Post"),
+        content: const Text("Are you sure you want to delete this post?"),
+        actions: [
+          //Boton para cancelar
+          TextButton(
+            onPressed: () => Navigator.pop(context), 
+            child: const Text("Cancel"),
+          ),
+          
+          //Boton para eliminar
+          TextButton(
+            onPressed: () async {
+              //Borrar el comentario de la firestore
+              final commentDocs = await FirebaseFirestore.instance
+              .collection("Lienzos")
+              .doc(widget.postId)
+              .collection("Comments")
+              .get(),
+              
+              //Eliminar el lienzo
+;}, 
+            child: const Text("Delete"),
+          ),
+      ],
+    ),
+      
+      ;)
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(8),
       ),
       margin: EdgeInsets.only(top: 25, left: 25, right: 25),
@@ -126,16 +166,34 @@ class _LienzoPostState extends State<LienzoPost> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Lienzo
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              // usuario
-              Text(widget.user, style: TextStyle(color: Colors.grey[500])),
 
-              const SizedBox(height: 10),
+              //grupo de texto (mensaje + usuario)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // usuario
+                  Row(
+                    children: [
+                      Text(
+                        widget.user,
+                        style: TextStyle(color: Colors.grey[400]),
+                      ),
+                      Text(" - ", style: TextStyle(color: Colors.grey[400])),
+                      Text(widget.time, style: TextStyle(color: Colors.grey[400])),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+              
+                  //mensaje
+                  Text(widget.message),
+                ],
+              ),
 
-              //mensaje
-              Text(widget.message),
+              //Boton de eliminar
+              if (widget.user == currentUser.email)
+              DeleteButton(onTap: deletePost)
             ],
           ),
 
@@ -177,10 +235,12 @@ class _LienzoPostState extends State<LienzoPost> {
             ],
           ),
 
+          const SizedBox(height: 20),
+
           //comentarios debajo del post
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection("UserPosts")
+                  .collection("Lienzos")
                   .doc(widget.postId)
                   .collection("Comments")
                   .orderBy("CommentTime", descending: true)
