@@ -13,7 +13,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   //Usuario
   final currentUser = FirebaseAuth.instance.currentUser!;
-  //Todos los usuarios
+  //Tdos los usuarios
   final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   //Editar campo

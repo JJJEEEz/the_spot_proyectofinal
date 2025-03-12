@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                           final post = snapshot.data!.docs[index];
                           return LienzoPost(
                             message: post['Message'],
-                            user: post['UserEmail'],
+                            user: post['userEmail'],
                             postId: post.id,
                             likes: List<String>.from(
                                 post['Likes'] ?? []), // ?? [] para evitar null
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
               // usuario
               Text(
                 "Logged in as: ${currentUser.email!}",
-                style: TextStyle(color: const Color.fromARGB(255, 60, 27, 66)),
+                style: TextStyle(color: Colors.grey[800]),
               ),
 
               const SizedBox(height: 25),
