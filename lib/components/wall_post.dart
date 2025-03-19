@@ -207,7 +207,10 @@ class _LienzoPostState extends State<LienzoPost> {
                   const SizedBox(height: 10),
 
                   //mensaje
-                  Text(widget.message),
+                  Text(
+                    widget.message,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
 

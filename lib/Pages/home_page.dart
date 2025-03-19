@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                           final post = snapshot.data!.docs[index];
                           return LienzoPost(
                             message: post['Message'],
-                            user: post['userEmail'],
+                            user: post['UserEmail'],
                             postId: post.id,
                             likes: List<String>.from(
                                 post['Likes'] ?? []), // ?? [] para evitar null

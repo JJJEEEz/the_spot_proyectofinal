@@ -52,6 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'Username': emailTextController.text
             .split('@')[0], //nombre de usuario predeterminado
         'bio': 'Edit your bio', //biografia predeterminada
+        'uid': userCredential.user!.uid,
         //se pueden añadir más campos
       });
 
